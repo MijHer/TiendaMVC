@@ -13,7 +13,7 @@
 		private $strEmail;
 		private $strPassword;
 		private $strToken;
-		private $intTipoId;
+		private $intTipoId;		
 		
 		public function insertClienteT(string $nombre, string $apellido, int $telefono, string $email, string $password, int $tipoid)
 		{
@@ -47,6 +47,34 @@
 			}
 	        return $return;
 	       
+		}
+
+		public function insertPedido(string $idtransaccionpaypal = NULL, string $datospaypal = NULL, int $personaid, float $costo_envio, string $monto, int $tipopagoid, string $direccionenvio,string $status)
+		{
+			$this->con = new Mysql();
+			$query_insert = "INSERT INTO pedido(idtransaccionpaypal, datospaypal, personaid, costo_envio, monto, tipopagoid, direccion_envio, status) VALUES(?,?,?,?,?,?,?,?)";
+			$arrData = array($idtransaccionpaypal,
+								$datospaypal,
+								$personaid,
+								$costo_envio,
+								$monto,
+								$tipopagoid,
+								$direccionenvio,
+								$status
+							);
+			$request_insert = $this->con->insert($query_insert, $arrData);
+			$return = $request_insert;
+			return $return;
+		}
+
+   		public function insertDetalle(int $idpedido,int $productoid,float $precio,int $cantidad)
+		{
+			$this->con = new Mysql();
+			$query_insert = "INSERT INTO detalle_pedido(pedidoid, productoid, precio, cantidad) VALUES(?,?,?,?)";
+			$arrData = array($idpedido,$productoid,$precio,$cantidad);
+			$request_insert = $this->con->insert($query_insert, $arrData);
+			$return = $request_insert;
+			return $return;
 		}
 
 		public function insertDetalleTemp(array $pedido)
@@ -88,7 +116,45 @@
 					$request_insert = $this->con->insert($sql_insert, $arrData);
 				}
 			}
-		}		
+		}
+
+		public function getPedido(int $idpedido)
+		{
+			$this->con = new Mysql();
+			$request = array();
+			$sql = "SELECT p.idpedido,
+							 p.referenciacobro,
+							 p.idtransaccionpaypal,
+							 p.personaid,
+							 p.costo_envio,
+							 p.fecha,
+							 p.monto,
+							 t.tipopago,
+							 p.direccion_envio,
+							 p.status
+						FROM pedido p
+						INNER JOIN tipopago t
+						ON p.tipopagoid = t.idtipopago
+						WHERE p.idpedido = $idpedido";
+			$requestPedido = $this->con->select($sql);
+			if (count($requestPedido) > 0) 
+			{
+				$sql_detalle = "SELECT p.idproducto,
+								p.nombre as producto,
+								d.precio,
+								d.cantidad
+						FROM detalle_pedido d
+						INNER JOIN producto p
+						ON d.productoid = p.idproducto
+						WHERE d.pedidoid = $idpedido";
+				$requestProducto = $this->con->select_all($sql_detalle);
+
+				$request = array('orden' => $requestPedido,
+								'detalle' => $requestProducto
+								);
+			}
+			return $request;
+		}
 	}
 
 ?>

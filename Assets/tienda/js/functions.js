@@ -286,6 +286,7 @@ function fntUpdateCant(pro, cant)
 	return false;
 }
 
+//para verificar si el campo direccion este rellenado
 if (document.querySelector('#txtDireccion')) 
 {
 	 let direccion = document.querySelector('#txtDireccion');
@@ -295,12 +296,25 @@ if (document.querySelector('#txtDireccion'))
 	 });
 }
 
+//para verificar si el campo ciudad este rellenado
 if (document.querySelector('#txtCiudad')) 
 {
 	let ciudad = document.querySelector('#txtCiudad');
 	ciudad.addEventListener('keyup', function () {
 		let c = this.value;
 		fntViewPago();
+	});
+}
+
+if (document.querySelector('#condiciones')) {
+	let opt = document.querySelector('#condiciones');
+	opt.addEventListener("click", function () {
+		let opcion = this.checked;
+		if (opcion) {
+            document.querySelector('#optMetodoPago').classList.remove('notblock');
+        } else {
+            document.querySelector('#optMetodoPago').classList.add('notblock');
+        }
 	});
 }
 
@@ -316,3 +330,46 @@ function fntViewPago()
 		document.querySelector('#divMetodoPago').classList.remove('notblock');
 	}
 }
+
+if (document.querySelector('#btnComprar')){
+	let btnPago = document.querySelector('#btnComprar');
+	btnPago.addEventListener('click', function () {
+
+		let dir = document.querySelector('#txtDireccion').value;
+		let ciudad = document.querySelector('#txtCiudad').value;
+		let inttipopago = document.querySelector('#listtipopago').value;
+		if (dir == "" || ciudad == "" || inttipopago == "") 
+		{
+			swal('Ingrese todo los datos de envio', error);
+			return false;
+		}else{
+			divLoading.style.display = "flex";
+			let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+			let ajaxUrl = base_url+'/Tienda/procesarVenta';
+			let formData = new FormData();
+			formData.append('direccion', dir);
+			formData.append('ciudad', ciudad);
+			formData.append('inttipopago', inttipopago);
+			request.open("POST", ajaxUrl, true);
+			request.send(formData);
+
+			request.onreadystatechange = function() {
+				if (request.readyState != 4) return;
+				if (request.status == 200) {
+					let objData = JSON.parse(request.responseText);
+					if (objData.status) 
+					{
+						window.location = base_url+'/Tienda/confirmarpedido';
+					}else{
+						swal("", objData.msg, 'error')
+					}
+				}
+				divLoading.style.display = "none";
+				return false;
+			}
+		}
+
+	},false);
+}
+
+

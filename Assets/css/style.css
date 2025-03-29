@@ -167,10 +167,18 @@
 }
 
 /* TIENDA VIRTUAL */
-.divmetodpago label{
+.divmetodpago label, #divCondiciones{
 	width: 100%;
 	display: flex;
 }
 .divmetodpago label input{
 	margin-right: 15px;
+}
+#divCondiciones label {
+	margin-left: 5px;
+	margin-right: 5px;
+	margin-bottom: 0px;
+}
+.modal {
+	z-index: 9999;
 }

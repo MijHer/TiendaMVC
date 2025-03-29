@@ -7,15 +7,106 @@
 		$subtotal += $totalProductos;
 	}
 	$total += $subtotal + COSTOENVIO;
-
  ?>
- 	<script src="https://www.paypal.com/sdk/js?client-id=AXcu4igqOIlCNdB7j8XzRjTpC7fQGV3uVtyfPDCqWEYj29fRb_7VWhavvEAbFbB7f2Cua6q_MXhpsi2x&buyer-country=US&currency=USD&components=buttons&enable-funding=venmo,paylater,card"
-            data-sdk-integration-source="developer-studio">	
-    </script>
-    <script src="<?= media(); ?>/js/app.js"></script>
+
+ 	<script src="https://www.paypal.com/sdk/js?client-id=<?= IDCLIENTE ?>&buyer-country=US&currency=<?= CURRENCY ?>" data-sdk-integration-source="developer-studio">	
+   </script>
+
+   <script>
+   	paypal.Buttons({
+   		style: {
+   			shape: "pill",
+   			layout: "vertical",
+   			color: "gold",
+   			label: "paypal",
+   		},
+        	/*createOrder: function(data, actions) {
+        		return actions.order.create({
+        			purchase_units: [{
+        				amount: {
+        					value: <?= $total; ?>
+        				},
+        				description: "Compra de articulos en <?= NOMBRE_EMPRESA ?> por <?= SMONEY.$total ?>",
+        			}]
+        		});
+        	},*/
+   		createOrder: async function(data, actions) {
+   			try{
+   				const order = await actions.order.create({
+   					purchase_units: [{
+   						amount: {
+   							value: <?= $total; ?>
+   						},
+   						description: "Compra de artículos en <?= NOMBRE_EMPRESA ?> por <?= SMONEY.$total ?>"
+   					}]
+   				});
+   				return order;
+   			}catch (error) {
+   				console.error('Error al crear la orden:', error);
+		        	throw error; // Propaga el error para manejarlo más adelante
+		        }
+		     },
+		     onApprove: async function(data, actions) {
+		     	try{
+		     		const details = await actions.order.capture();
+		     		let base_url = "<?= base_url(); ?>";
+		     		let dir = document.querySelector('#txtDireccion').value;
+		     		let ciudad = document.querySelector('#txtCiudad').value;
+		     		let inttipopago = 1;
+
+		     		let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+		     		let ajaxUrl = base_url+'/Tienda/procesarVenta';
+		     		let formData = new FormData();
+		     		formData.append('direccion', dir);
+		     		formData.append('ciudad', ciudad);
+		     		formData.append('inttipopago', inttipopago);
+		     		formData.append('datapay', JSON.stringify(details));
+		     		request.open("POST", ajaxUrl, true);
+		     		request.send(formData);
+
+		     		request.onreadystatechange = function() {
+		     			if (request.readyState != 4) return;
+		     			if (request.status == 200) {
+		     				let objData = JSON.parse(request.responseText);
+		     				if (objData.status) 
+		     				{
+		     					window.location = base_url+'/Tienda/confirmarpedido';
+		     				}else{
+		     					swal("", objData.msg, 'error')
+		     				}
+		     			}
+		     		}
+		     	}catch(error){
+		     		console.error('Error en la aprovacion', error);
+		     		throw error;
+		     	}
+		     }
+		  }).render("#paypal-btn-container"); 
+	</script>
+
+    <!-- Modal -->
+	<div class="modal fade" id="modalTerminos" tabindex="-1"  aria-hidden="true">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" >Terminos y Condiciones</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ex aliquam ducimus iste vero. Placeat iure vitae quisquam explicabo quia a animi impedit, autem labore, sint excepturi, reiciendis inventore, commodi similique!</p> <br>
+	        <p>Lorem ipsum dolor sit amet consectetur adipisicing, elit. Blanditiis, debitis totam asperiores eius iste suscipit architecto odit odio tempore ea vel repudiandae, ipsum sed, molestias rem illo temporibus nulla. Culpa?</p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 
 	 <br> <br> <br>
-	 <hr>
+	 <hr>	 
 	<!-- breadcrumb -->
 	<div class="container">
 		<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
@@ -158,60 +249,67 @@
 					</div>
 
 					<?php 
-						if (isset($_SESSION['login'])){	
-
+						if (isset($_SESSION['login'])){
 					?>
 					<div id="divMetodoPago" class="notblock">
-						<h4 class="mtext-109 cl2 p-b-30">
-							Método de pago
-						</h4>
-						<div class="divmetodpago">
-							<div>
-								<label for="paypal">
-									<input type="radio" id="paypal" class="methodpago" name="payment-method" checked="" value="Paypal">
-									<img src="<?= media()?>/images/img-paypal.jpg" alt="Icono de PayPal" class="ml-space-sm" width="74" height="20">
-								</label>
-							</div>
-							<div>
-								<label for="contraentrega">
-									<input type="radio" id="contraentrega" class="methodpago" name="payment-method" value="CT">
-									<span>Contra Entrega</span>
-								</label>
-							</div>
-							<div id="divtipopago" class="notblock">
-								<label for="listtipopago">Tipo de pago</label>
-								<div class="rs1-select2 rs2-select2 bor8 bg0 m-b-12 m-t-9">
-									<select id="listtipopago" class="js-select2" name="listtipopago">
-										<?php
-											if (count($data['tiposPago']) > 0) 
-											{
-												foreach ($data['tiposPago'] as $tipopago) 
-												{
-													if ($tipopago['idtipopago'] != 1) 
-													{								
-										?>
-										<option value="<?= $tipopago['idtipopago']; ?>"><?= $tipopago['tipopago']; ?></option>
-										<?php 
-													}
-												}
-											} 
-										?>
-									</select>
-									<div class="dropDownSelect2"></div>
-								</div>
-								<br>
-								<button type="submit" id="btnComprar" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
-									Procesar Pedido
-								</button>
-							</div>
-							<div id="divpaypal">
-								<div>
-									<p>Para completar la transacción, te enviaremos a los servidores seguros de PayPal.</p>
-								</div>
-								<br>
-								<div id="paypal-btn-container"></div>
-							</div>						
+						<div id="divCondiciones">
+							<input type="checkbox" id="condiciones">
+							<label for="condicinoes"> Aceptar </label>
+							<a href="#" data-toggle="modal" data-target="#modalTerminos"> Terminos y Condiciones</a>
 						</div>
+						<br>
+						<div id="optMetodoPago" class="notblock">
+							<h4 class="mtext-109 cl2 p-b-30">
+							Método de pago
+							</h4>
+							<div class="divmetodpago">
+								<div>
+									<label for="paypal">
+										<input type="radio" id="paypal" class="methodpago" name="payment-method" checked="" value="Paypal">
+										<img src="<?= media()?>/images/img-paypal.jpg" alt="Icono de PayPal" class="ml-space-sm" width="74" height="20">
+									</label>
+								</div>
+								<div>
+									<label for="contraentrega">
+										<input type="radio" id="contraentrega" class="methodpago" name="payment-method" value="CT">
+										<span>Contra Entrega</span>
+									</label>
+								</div>
+								<div id="divtipopago" class="notblock">
+									<label for="listtipopago">Tipo de pago</label>
+									<div class="rs1-select2 rs2-select2 bor8 bg0 m-b-12 m-t-9">
+										<select id="listtipopago" class="js-select2" name="listtipopago">
+											<?php
+												if (count($data['tiposPago']) > 0) 
+												{
+													foreach ($data['tiposPago'] as $tipopago) 
+													{
+														if ($tipopago['idtipopago'] != 1) 
+														{								
+											?>
+											<option value="<?= $tipopago['idtipopago']; ?>"><?= $tipopago['tipopago']; ?></option>
+											<?php 
+														}
+													}
+												} 
+											?>
+										</select>
+										<div class="dropDownSelect2"></div>
+									</div>
+									<br>
+									<button type="submit" id="btnComprar" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+										Procesar Pedido
+									</button>
+								</div>
+								<div id="divpaypal">
+									<div>
+										<p>Para completar la transacción, te enviaremos a los servidores seguros de PayPal.</p>
+									</div>
+									<br>
+									<div id="paypal-btn-container"></div>
+								</div>						
+							</div>
+						</div>						
 					</div>										
 					<?php 
 						}

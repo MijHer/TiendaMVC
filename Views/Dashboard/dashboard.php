@@ -13,7 +13,13 @@
         <div class="col-md-12">
             <div class="tile">
                 <div class="tile-body">Dashboard</div>
-                
+                <?php
+                    //$requestApi = CurlConnectionGet(URLPAYPAL."/v2/checkout/orders/3R855766JM8845306", "application/json", getTokenPaypal());
+                    //dep($requestApi);
+
+                    //$requestPost = CurlConnectionPost(URLPAYPAL."/v2/payments/captures/51P58980FU366112V/refund", "application/json", getTokenPaypal());
+                    //dep($requestPost);
+                 ?>
             </div>
         </div>
     </div>
