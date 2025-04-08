@@ -41,16 +41,20 @@
 					$emailComercio = $tsr->payee->email_address;
 					//detalles
 					$descripcion = $tsr->description;
+					$montoDetalle = $tsr->amount->value;
 
-					dep($data);					
+					//Detalle pago
+					$totalCompra =  $tsr->payments->captures[0]->seller_receivable_breakdown->gross_amount->value;
+					$comision = $tsr->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value;
+					$importeNeto = $tsr->payments->captures[0]->seller_receivable_breakdown->net_amount->value;
 					?>
 				<section id="sPedido" class="invoice">
 					<div class="row mb-4">
 						<div class="col-6">
 							<h2 class="page-header"><img src="<?= media()?>/images/img-paypal.jpg"></h2>
 						</div>
-						<div class="col-6">
-							<h5 class="text-right"><button class="btn btn-primary"> REEMBOLSO </button></h5>
+						<div class="col-6 text-right">
+							<a href="#" class="btn btn-outline-primary"><i class="fa fa-reply-all"></i> REEMBOLSO </a>
 						</div>
 					</div>
 					<div class="row invoice-info">
@@ -78,37 +82,52 @@
 					</div>
 					<div class="row">
 						<div class="col-12 table-responsive">
-							<table class="table table-striped">
-								<thead>
+							<table class="table">
+								<thead class="thead-light">
 									<tr>
-										<th>Detalle Pedido</th>
-										<th>Cantidad</th>
-										<th>Precio</th>
-										<th>Subtotal</th>
+										<th >Detalle Pedido</th>
+										<th class="text-right">Cantidad</th>
+										<th class="text-right">Precio</th>
+										<th class="text-right">Subtotal</th>
 									</tr>
 								</thead>
 								<tbody>									
 									<tr>
 										<td ><?= $descripcion ?></td>
 										<td class="text-right">1</td>
-										<td class="text-right" class="text-center"><?= SMONEY.' '.formatMoney($monto) ?></td>
-										<td class="text-right" class="text-right"><?= SMONEY.' '.formatMoney($monto) ?></td>
+										<td class="text-right" class="text-center"><?= $monto.' '.$moneda ?></td>
+										<td class="text-right" class="text-right"><?= $monto.' '.$moneda ?></td>
 									</tr>
 								</tbody>
 								<tfoot>
-									<tr>
-										<th class="text-left">Total de compra:</th>
-										<td ><?= SMONEY.' '.formatMoney($monto) ?></td>
-									</tr>
-									<tr>
-										<th class="text-left">Comision Paypal</th>
-										<td class="text-left"><?= SMONEY.' '.formatMoney($monto) ?></td>
-									</tr>
-									<tr>
-										<th class="text-left">Inporte neto</th>
-										<td class="text-left"><?= SMONEY.' '.formatMoney($monto) ?></td>
+									<tr>										
+										<th colspan="3" class="text-right"><b>Total de la compra</b></th>
+										<td class="text-right" ><?= $montoDetalle.' '.$moneda ?></td>
 									</tr>
 								</tfoot>
+							</table>
+							<table class="table">
+								<thead class="thead-light">
+									<tr>
+										<th colspan="2"> Detalle del pago</th>
+									</tr>
+								</thead>
+								<tbody>
+									<div class="row">
+										<tr>
+											<td class="col-2"><strong>Total de la compra</strong></td>
+											<td class="col-10 text-left"><?= $totalCompra.' '.$moneda ?></td>
+										</tr>
+										<tr>
+											<td class="col-2"><strong>Comision Paypal</strong></td>
+											<td class="col-10 text-left">-<?= $comision.' '.$moneda  ?></td>
+										</tr>
+										<tr>
+											<td class="col-2"><strong>Inporte neto</strong></td>
+											<td class="col-10 text-left"><?= $importeNeto.' '.$moneda ?></td>
+										</tr>
+									</div>
+								</tbody>
 							</table>
 						</div>
 					</div>
