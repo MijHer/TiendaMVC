@@ -112,7 +112,7 @@
 			$data['page_title'] = "Transaccion - Tienda Virtual";
 			$data['page_name'] = "transaccion";
 			$data['objTransaccion'] = $this->model->selectTransPaypal($transaccion);
-			$data['arrPedido'] = $this->model->selectPedido(39, $idpersona);
+			$data['arrPedido'] = $this->model->selectPedido(40, $idpersona);
 			$this->views->getView($this, 'transaccion', $data);
 		}
 	}

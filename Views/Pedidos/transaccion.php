@@ -15,7 +15,7 @@
 		<div class="col-md-12">
 			<div class="tile">
 				<?php 
-					//dep($data['objTransaccion']);
+					dep($data['objTransaccion']);
 					if(empty($data['objTransaccion'])){
 				?>
 				<p>Datos no encontrados de la transaccion</p>
@@ -29,7 +29,7 @@
 					$moneda = $tsr->payments->captures[0]->amount->currency_code;
 					//DATOS DEL CLIENTE
 					$cl = $data['objTransaccion']->payer;
-					$nombreCliente = $cl->name->given_name.' '. $cl->name->surname;
+					$nombreCliente = $cl->name->given_name.' '.$cl->name->surname;
 					$emailCliente = $cl->email_address;
 					$codCiudad = $cl->address->country_code;
 
@@ -47,6 +47,17 @@
 					$totalCompra =  $tsr->payments->captures[0]->seller_receivable_breakdown->gross_amount->value;
 					$comision = $tsr->payments->captures[0]->seller_receivable_breakdown->paypal_fee->value;
 					$importeNeto = $tsr->payments->captures[0]->seller_receivable_breakdown->net_amount->value;
+
+					//Reembolso
+					$reembolso = false;
+					if (isset($tsr->payments->refunds)) {
+						$reembolso = true;
+						$importeBruto = $tsr->payments->refunds[0]->seller_payable_breakdown->gross_amount->value;
+						$comisionPaypal = $tsr->payments->refunds[0]->seller_payable_breakdown->paypal_fee->value;
+						$importeNetoReem = $tsr->payments->refunds[0]->seller_payable_breakdown->net_amount->value;
+						$fechaReembolso = $tsr->payments->refunds[0]->update_time;
+					}
+
 					?>
 				<section id="sPedido" class="invoice">
 					<div class="row mb-4">
@@ -54,7 +65,9 @@
 							<h2 class="page-header"><img src="<?= media()?>/images/img-paypal.jpg"></h2>
 						</div>
 						<div class="col-6 text-right">
+							<?php if (!$reembolso) {	?>
 							<a href="#" class="btn btn-outline-primary"><i class="fa fa-reply-all"></i> REEMBOLSO </a>
+							<?php } ?>
 						</div>
 					</div>
 					<div class="row invoice-info">
@@ -70,7 +83,7 @@
 							<address>
 								<b>Nombre: </b> <?= $nombreCliente ?><br>
 								<b>Email: </b><?= $emailCliente ?><br>
-								<b>Telefono:</b> <?= $data['arrPedido']['cliente']['telefono'] ?><br>
+								<b>Telefono:</b> <?= $data['arrPedido']['cliente']['telefono'] ?> <br><!-- PARA MOSTRAR EL TELEFONO DEL CLIENTE DESDE EL ARRAY DEL PEDIDO  -->
 								<b>Direccion</b>  <?= $direccion1 ?><br>
 								<?= $direccion2.', '.$direccion3.' '.$codPostal ?> <br>
 								<?= $codCiudad?>
@@ -82,7 +95,33 @@
 					</div>
 					<div class="row">
 						<div class="col-12 table-responsive">
-							<table class="table">
+							<?php if($reembolso) {	 ?>
+							<table class="table table-sm">
+								<thead class="thead-light">
+									<tr>
+										<th >Movimiento</th>
+										<th class="text-right">Importe bruto</th>
+										<th class="text-right">Comision</th>
+										<th class="text-right">Inporte neto</th>
+									</tr>
+								</thead>
+								<tbody>									
+									<tr>
+										<td ><?= $fechaReembolso.' Reembolso para '.$nombreCliente ?></td>
+										<td class="text-right">- <?= $importeBruto. ' '.$moneda ?></td>
+										<td class="text-right">- <?= $comisionPaypal.' '.$moneda ?></td>
+										<td class="text-right">- <?= $importeNetoReem.' '.$moneda ?></td>
+									</tr>
+									<tr>
+										<td ><?= $fechaReembolso?> Cancelacion de la comision Paypal</td>
+										<td class="text-right"><?= $comisionPaypal.' '.$moneda ?></td>
+										<td class="text-right">0.00 <?= $moneda ?></td>
+										<td class="text-right"><?= $comisionPaypal.' '.$moneda ?></td>
+									</tr>
+								</tbody>
+							</table>
+							<?php } ?>
+							<table class="table table-sm">
 								<thead class="thead-light">
 									<tr>
 										<th >Detalle Pedido</th>
@@ -95,8 +134,8 @@
 									<tr>
 										<td ><?= $descripcion ?></td>
 										<td class="text-right">1</td>
-										<td class="text-right" class="text-center"><?= $monto.' '.$moneda ?></td>
-										<td class="text-right" class="text-right"><?= $monto.' '.$moneda ?></td>
+										<td class="text-right"><?= $monto.' '.$moneda ?></td>
+										<td class="text-right"><?= $monto.' '.$moneda ?></td>
 									</tr>
 								</tbody>
 								<tfoot>
@@ -106,7 +145,7 @@
 									</tr>
 								</tfoot>
 							</table>
-							<table class="table">
+							<table class="table table-sm">
 								<thead class="thead-light">
 									<tr>
 										<th colspan="2"> Detalle del pago</th>
@@ -120,7 +159,7 @@
 										</tr>
 										<tr>
 											<td class="col-2"><strong>Comision Paypal</strong></td>
-											<td class="col-10 text-left">-<?= $comision.' '.$moneda  ?></td>
+											<td class="col-10 text-left">- <?= $comision.' '.$moneda  ?></td>
 										</tr>
 										<tr>
 											<td class="col-2"><strong>Inporte neto</strong></td>

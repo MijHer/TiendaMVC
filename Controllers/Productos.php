@@ -120,7 +120,7 @@ class Productos extends Controllers
 						$btnView = '<button class="btn btn-info btn-sm" onClick="fntViewInfo('.$arrData[$i]['idproducto'].')" title="Ver producto"><i class="far fa-eye"></i></button>';
 					}
 					if($_SESSION['permisosMod']['u']){
-						$btnEdit = '<button class="btn btn-primary  btn-sm" onClick="fntEditInfo(this,'.$arrData[$i]['idproducto'].')" title="Editar producto"><i class="fas fa-pencil-alt"></i></button>';
+						$btnEdit = '<button class="btn btn-primary  btn-sm" onClick="fntEditInfo('.$arrData[$i]['idproducto'].')" title="Editar producto"><i class="fas fa-pencil-alt"></i></button>';
 					}
 					if($_SESSION['permisosMod']['d']){	
 						$btnDelete = '<button class="btn btn-danger btn-sm" onClick="fntDelInfo('.$arrData[$i]['idproducto'].')" title="Eliminar producto"><i class="far fa-trash-alt"></i></button>';
@@ -140,7 +140,7 @@ class Productos extends Controllers
 				$idproducto = intval($idproducto);
 				if ($idproducto > 0) 
 				{
-					$arrData = $this->model->selectProducto($idproducto);				
+					$arrData = $this->model->selectProducto($idproducto);
 					if (empty($arrData)) 
 					{
 						$arrResponse = array('status' => false, 'msg' => 'Datos no encontrados');
