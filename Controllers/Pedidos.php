@@ -106,13 +106,12 @@
 				$idpersona = $_SESSION['userData']['idpersona'];
 			}
 
-			$requestTransaccion = $this->model->selectTransPaypal($transaccion);
+			$requestTransaccion = $this->model->selectTransPaypal($transaccion, $idpersona);
 			//dep($requestTransaccion);
 			$data['page_tag'] = "Transaccion";
 			$data['page_title'] = "Transaccion - Tienda Virtual";
 			$data['page_name'] = "transaccion";
-			$data['objTransaccion'] = $this->model->selectTransPaypal($transaccion);
-			$data['arrPedido'] = $this->model->selectPedido(40, $idpersona);
+			$data['objTransaccion'] = $requestTransaccion;
 			$this->views->getView($this, 'transaccion', $data);
 		}
 	}

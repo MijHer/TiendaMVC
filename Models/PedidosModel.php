@@ -86,10 +86,15 @@
 			return $request;
 		}
 
-		public function selectTransPaypal(string $transaccion)
+		public function selectTransPaypal(string $transaccion, $idpersona = null)
 		{
+			$busqueda = "";
+			if ($idpersona != null) {
+				$busqueda = "AND personaid = $idpersona";
+			}
+
 			$objTransaccion = array();
-			$sql = "SELECT datospaypal FROM pedido WHERE idtransaccionpaypal = '{$transaccion}' ";
+			$sql = "SELECT datospaypal FROM pedido WHERE idtransaccionpaypal = '{$transaccion}'".$busqueda;
 			$requestData = $this->select($sql);
 			//dep($requestData); exit();
 			if (!empty($requestData)) {
