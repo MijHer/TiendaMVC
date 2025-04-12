@@ -1,6 +1,7 @@
 <?php 
 	headerAdmin($data);
 ?>
+<div id="divModal"></div>
 <main class="app-content">
 	<div class="app-title">
 		<div>
@@ -16,7 +17,6 @@
 			<div class="tile">
 				<?php 
 					//dep($data['objTransaccion']);
-					//dep($_SESSION['userData']);
 					if(empty($data['objTransaccion'])){
 				?>
 				<p>Datos no encontrados de la transaccion</p>
@@ -32,6 +32,7 @@
 					$cl = $data['objTransaccion']->payer;
 					$nombreCliente = $cl->name->given_name.' '.$cl->name->surname;
 					$emailCliente = $cl->email_address;
+					$telCliente = isset($cl->phone) ? $cl->phone->phone_number->national_number : "";
 					$codCiudad = $cl->address->country_code;
 
 					$direccion1 = $tsr->shipping->address->address_line_1;
@@ -69,7 +70,7 @@
 							<?php if (!$reembolso) {
 									if ($_SESSION['permisosMod']['u'] AND $_SESSION['userData']['idrol'] != RCLIENTES) {									
 								?>
-							<a href="#" class="btn btn-outline-primary"><i class="fa fa-reply-all"></i> REEMBOLSO </a>
+							<button class="btn btn-outline-primary" onclick="fntTransaccion('<?= $idTransaccion?>');"><i class="fa fa-reply-all"></i> REEMBOLSO </button>
 							<?php 
 										}
 									}
@@ -88,7 +89,10 @@
 						<div class="col-4"><b>Enviado por :</b><br><br>
 							<address>
 								<b>Nombre: </b> <?= $nombreCliente ?><br>
-								<b>Email: </b><?= $emailCliente ?><br>								
+								<b>Email: </b><?= $emailCliente ?><br>
+								<?php if (!empty($telCliente)) {	 ?>						
+								<b>Telefono:</b> <?= $telCliente ?><br>
+								|<?php } ?>
 								<b>Direccion</b>  <?= $direccion1 ?><br>
 								<?= $direccion2.', '.$direccion3.' '.$codPostal ?> <br>
 								<?= $codCiudad?>

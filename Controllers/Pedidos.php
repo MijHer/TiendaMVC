@@ -111,8 +111,23 @@
 			$data['page_tag'] = "Transaccion";
 			$data['page_title'] = "Transaccion - Tienda Virtual";
 			$data['page_name'] = "transaccion";
+			$data['page_functions_js'] = "functions_pedidos.js";
 			$data['objTransaccion'] = $requestTransaccion;
 			$this->views->getView($this, 'transaccion', $data);
+		}
+
+		function getTransaccion(string $idtransaccion)
+		{
+			if ($_SESSION['permisosMod']['r'] and $_SESSION['userData']['idrol'] != RCLIENTES) {
+				if ($idtransaccion == "") {
+					$arrResponse = array('status' => false, 'msg' => 'Datos incorrectos');
+				}else{
+					$transaccion = strClean($idtransaccion);
+					$requestTransaccion = $this->model->selectTransPaypal($transaccion)
+					
+				}
+			}
+			die();
 		}
 	}
 ?>
