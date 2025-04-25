@@ -144,9 +144,13 @@
 					$idtransaccion = strClean($_POST['idtransaccion']);
 					$observacion = strClean($_POST['observacion']);
 					$requestTransaccion = $this->model->reembolsoPaypal($idtransaccion, $observacion);
-					dep($requestTransaccion);
+					if ($requestTransaccion) {
+						$arrResponse = array("status" => true, "msg" => 'El reembolso se ha procesado');
+					}else{
+						$arrResponse = array("status" => false, "msg" => 'No es posible procesar Reembolso');
+					}
 				}else{
-					$arrResponse = array('status' => false, 'msg' => 'No es posible reembolsar');
+					$arrResponse = array("status" => false, "msg" => 'No es posible reembolsar, consulte al administrador');
 				}
 				echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
 			}

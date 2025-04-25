@@ -122,7 +122,15 @@ function fntReembolsar()
 				if (request.readyState != 4) return;
 				if (request.status == 200) 
 				{
-					console.log(request.responseText);
+					let objData = JSON.parse(request.responseText);
+					if (objData.status) 
+					{
+						window.location.reload();
+					}else{
+						swal('Error', objData.msg, 'error');
+					}
+					divLoading.style.display = "none";
+					return false;
 				}
 			}
 		}

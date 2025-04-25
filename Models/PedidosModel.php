@@ -100,14 +100,14 @@
 			if (!empty($requestData)) {
 				$objData = json_decode($requestData['datospaypal']);
 				
-				//PARA SANDBOX - PUEBA ---->
+				// INICIO PARA SANDBOX - PUEBA ---->
 				$paraUrl = $objData->links[0]->href; //SANDBOX
 				$objLinks = CurlConnectionGet($paraUrl, 'application/json',getTokenPaypal()); //SANDBOX
 				$urlTransaccion = $objLinks->purchase_units[0]->payments->captures[0]->links[0]->href; //SANDBOX
 				$urlOrden = $objLinks->purchase_units[0]->payments->captures[0]->links[2]->href; //SANDBOX
 				// FIN SANDBOX - PUEBA  <----
 
-				/*PARA PRODUCCION **----
+				/*PARA INICIO  PRODUCCION **----
 				$urlTransaccion = $objData->purchase_units[0]->payments->captures[0]->links[0]->href; 
 				$urlOrden = $objData->purchase_units[0]->payments->captures[0]->links[2]->href;
 				---*/
@@ -119,15 +119,43 @@
 
 		public function reembolsoPaypal(string $idtransaccion, string $observacion)
 		{
+			$response = false;
 			$sql = "SELECT idpedido,datospaypal FROM pedido WHERE idtransaccionpaypal = '{$idtransaccion}'";
 			$requestData = $this->select($sql);
 			if (!empty($requestData)) {
+				// INICIO PARA SANDBOX - PUEBA ---->
 				$objData = json_decode($requestData['datospaypal']);
-				dep($objData);
+				$paraUrl = $objData->links[0]->href;
+				$objLinks = CurlConnectionGet($paraUrl, 'application/json',getTokenPaypal());
+				$urlReembolso = $objLinks->purchase_units[0]->payments->captures[0]->links[1]->href;
+				// FIN SANDBOX - PUEBA  <----
+
+				/*PARA INICIO  PRODUCCION **----
+				$urlReembolso = $objData->purchase_units[0]->payments->captures[0]->links[1]->href; 
+				$urlOrden = $objData->purchase_units[0]->payments->captures[0]->links[2]->href;
+				---*/
+
+				$objTransaccion = CurlConnectionPost($urlReembolso, 'application/json',getTokenPaypal());
+				if (isset($objTransaccion->status) AND $objTransaccion->status == "COMPLETED") {
+					$idpedido = $requestData['idpedido'];
+					$idtransaccion = $objTransaccion->id;
+					$intStatus = $objTransaccion->status;
+					$jsonData = json_encode($objTransaccion);
+					$observacion = $observacion;
+
+					$sql_insert = "INSERT INTO reembolso(pedidoid, idtransaccion, datosreembolso, observacion, status) VALUES(?,?,?,?,?)";
+					$arrData = array($idpedido, $idtransaccion, $intStatus, $jsonData, $observacion);
+					$request_insert = $this->insert($sql_insert, $arrData);
+					if ($request_insert > 0) {
+						$updatePedido = "UPDATE pedido SET status = ? WHERE idpedido = $idpedido";
+						$arrPedido = array("Reembolsado");
+						$request = $this->update($updatePedido,$arrPedido);
+						$response = true;
+					}
+				}
+				return $response;
 			}
-
 		}
-
 	}
  ?>
 
