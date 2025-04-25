@@ -117,6 +117,17 @@
 			return $objTransaccion;
 		}
 
+		public function reembolsoPaypal(string $idtransaccion, string $observacion)
+		{
+			$sql = "SELECT idpedido,datospaypal FROM pedido WHERE idtransaccionpaypal = '{$idtransaccion}'";
+			$requestData = $this->select($sql);
+			if (!empty($requestData)) {
+				$objData = json_decode($requestData['datospaypal']);
+				dep($objData);
+			}
+
+		}
+
 	}
  ?>
 

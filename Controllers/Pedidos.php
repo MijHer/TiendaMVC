@@ -116,7 +116,7 @@
 			$this->views->getView($this, 'transaccion', $data);
 		}
 
-		function getTransaccion(string $transaccion)
+		public function getTransaccion(string $transaccion)
 		{
 			if ($_SESSION['permisosMod']['r'] and $_SESSION['userData']['idrol'] != RCLIENTES) {
 				if ($transaccion == "") {
@@ -131,6 +131,23 @@
 						$arrResponse = array('status' => true, "html" => $htmlModal);
 					}
 				}				
+				echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+			}
+			die();
+		}
+
+		public function setReembolso()
+		{
+			if ($_POST) {				
+				if ($_SESSION['permisosMod']['u'] and $_SESSION['userData']['idrol'] != RCLIENTES) 
+				{
+					$idtransaccion = strClean($_POST['idtransaccion']);
+					$observacion = strClean($_POST['observacion']);
+					$requestTransaccion = $this->model->reembolsoPaypal($idtransaccion, $observacion);
+					dep($requestTransaccion);
+				}else{
+					$arrResponse = array('status' => false, 'msg' => 'No es posible reembolsar');
+				}
 				echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
 			}
 			die();

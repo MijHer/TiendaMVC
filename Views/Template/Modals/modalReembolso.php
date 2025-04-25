@@ -58,7 +58,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <button type="button" class="btn btn-primary " onclick="fntReembolsar()" data-dismiss="modal"><i class="fa fa-reply-all"></i> Reembolsar</button>
+                <button type="button" class="btn btn-primary" onclick="fntReembolsar()" data-dismiss="modal"><i class="fa fa-reply-all"></i> Reembolsar</button>
                 <button type="button" class="btn btn-secondary " data-dismiss="modal">Cerrar</button>
             </div>
         </div>
