@@ -25,7 +25,7 @@
 			$data['page_name'] = "pedidos";
 			$data['page_functions_js'] = "functions_pedidos.js";
 			$this->views->getView($this, 'pedidos', $data);
-		}
+		}		
 
 		public function getPedidos()
 		{
@@ -61,7 +61,7 @@
 					}
 
 					if ($_SESSION['permisosMod']['u']) {			        	
-			        	$btnEdit = '<button class="btn btn-primary btn-sm btnEditRol" onClick="fntEditRol('.$arrData[$i]['idpedido'].')" title="Editar Pedido"><i class="fa fa-solid fa-pencil"></i></button>';
+			        	$btnEdit = '<button class="btn btn-primary btn-sm btnEditRol" onClick="fntEditInfo('.$arrData[$i]['idpedido'].')" title="Editar Pedido"><i class="fa fa-solid fa-pencil"></i></button>';
 			        }
 
 			        if ($_SESSION['permisosMod']['d']) {
@@ -151,6 +151,28 @@
 					}
 				}else{
 					$arrResponse = array("status" => false, "msg" => 'No es posible reembolsar, consulte al administrador');
+				}
+				echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+			}
+			die();
+		}
+
+		public function getPedido($idpedido)
+		{
+			if ($_SESSION['permisosMod']['u'] AND $_SESSION['userData']['idrol'] != RCLIENTES) {
+				
+				if ($idpedido == "") 
+				{
+					$arrResponse = array('status' => false, "msg" => 'Datos incorrectos');
+				}else{
+					$requestPedido = $this->model->selectPedido($idpedido,"");
+					if(empty($requestPedido))
+					{
+						$arrResponse = array('status' => false, "msg" => 'Datos no disponible');
+					}else{
+						$htmlModal = getFile("Template/Modals/modalPedido", $requestPedido);
+						$arrResponse = array('status' => true, "html" => $htmlModal);
+					}
 				}
 				echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
 			}

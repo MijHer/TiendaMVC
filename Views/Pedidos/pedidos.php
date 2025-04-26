@@ -2,6 +2,7 @@
 headerAdmin($data); 
 //getModal('modalProductos', $data);
 ?>
+<div id="divModal"></div>
 <main class="app-content">
 	<div class="app-title">
 		<div>

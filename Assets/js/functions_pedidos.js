@@ -136,3 +136,30 @@ function fntReembolsar()
 		}
 	});
 }
+
+function fntEditInfo(idpedido) 
+{
+	let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+	let ajaxUrl = base_url+'/Pedidos/getPedido/'+idpedido;
+	divLoading.style.display = "flex";
+	request.open("GET", ajaxUrl, true);
+	request.send();
+
+	request.onreadystatechange = function () {		
+		if (request.readyState ==4 && request.status == 200) 
+		{
+			let objData = JSON.parse(request.responseText);
+			if (objData.status) 
+			{
+				document.querySelector("#divModal").innerHTML = objData.html;
+				$("#modalFormPedido").modal('show');
+				$("select").selectpicker();
+			}else{
+				swal("Error", objData.msg, "error");
+			}
+			divLoading.style.display = "none";
+			return false;
+		}
+	}
+
+}
