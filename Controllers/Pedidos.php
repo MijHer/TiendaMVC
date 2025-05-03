@@ -1,7 +1,9 @@
 <?php 
+	require_once("Models/TTiposPago.php");
 	
 	class Pedidos extends Controllers
 	{
+		use TTiposPago;
 		
 		function __construct()
 		{
@@ -170,6 +172,8 @@
 					{
 						$arrResponse = array('status' => false, "msg" => 'Datos no disponible');
 					}else{
+
+						$requestPedido['tiposPago'] = $this->getTiposPagoT();
 						$htmlModal = getFile("Template/Modals/modalPedido", $requestPedido);
 						$arrResponse = array('status' => true, "html" => $htmlModal);
 					}
