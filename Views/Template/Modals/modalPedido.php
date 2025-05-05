@@ -9,9 +9,9 @@
                 </button>
             </div>
             <div class="modal-body">
-                <?php dep($data); ?>
-                <form id="formUpdatePedido" name="formUpdatePedido">
+                <form id="formUpdatePedido" name="formUpdatePedido" class="form-horizontal">
                     <input type="hidden" name="idPedido" id="idPedido" value="" required>
+                    <?= dep($data) ?>
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
@@ -58,10 +58,16 @@
                                 <td>Estado: </td>
                                 <td> 
                                     <select name="listEstado" id="listEstado" class="form-control selectpicker" required>
-                                        <?php foreach (STATUS as $status) {
-                                         ?>
-                                        <option value="<?php $status ?>"><?= $status ?></option>
-                                        <?php } ?>
+                                        <?php for ($i=0; $i <  count(STATUS); $i++) { 
+                                          $selected = "";
+                                          if (STATUS[$i] == $data['orden']['status']) {
+                                              $selected = "selected";                                          
+                                                } 
+                                        ?>
+                                          <option value="<?= STATUS[$i] ?>" <?= $selected ?> ><?= STATUS[$i] ?></option>
+                                        <?php 
+                                            } 
+                                        ?>                                         
                                     </select>
                                 </td>
                             </tr>

@@ -182,5 +182,10 @@
 			}
 			die();
 		}
+
+		public function setPedido()
+		{
+			dep($_POST); die();
+		}
 	}
 ?>
