@@ -10,8 +10,7 @@
             </div>
             <div class="modal-body">
                 <form id="formUpdatePedido" name="formUpdatePedido" class="form-horizontal">
-                    <input type="hidden" name="idPedido" id="idPedido" value="" required>
-                    <?= dep($data) ?>
+                    <input type="hidden" name="idPedido" id="idPedido" value="<?= $data['orden']['idpedido'] ?>" required>
                     <table class="table table-bordered">
                         <tbody>
                             <tr>
@@ -28,8 +27,14 @@
                             </tr>
                             <tr>
                                 <td>Transaccion: </td>                                
-                                <td>                                    
-                                    <input type="text" name="txtTransaccion" id="txtTransaccion" class="form-control" value="<?= $transaccion = $data['orden']['tipopagoid'] == 1 ? $data['orden']['idtransaccionpaypal'] : ""; ?>" required>
+                                <td>
+                                    <?php 
+                                        if ($data['orden']['tipopagoid'] == 1) {
+                                            echo $data['orden']['idtransaccionpaypal'];
+                                        }else{
+                                    ?>
+                                        <input type="text" name="txtTransaccion" id="txtTransaccion" class="form-control" value="" required>
+                                        <?php } ?>
                                 </td>
                             </tr>
                             <tr>
@@ -48,7 +53,7 @@
                                                     $selected = "selected";
                                                 }
                                         ?>
-                                        <option value="<?= $data['tiposPago'][$i]['tipopago'] ?>" <?= $selected ?> ><?= $data['tiposPago'][$i]['tipopago'] ?></option>
+                                        <option value="<?= $data['tiposPago'][$i]['idtipopago'] ?>" <?= $selected ?> ><?= $data['tiposPago'][$i]['tipopago'] ?></option>
                                         <?php  }  ?>
                                     </select>
                                     <?php } ?>
