@@ -182,3 +182,27 @@
 .modal {
 	z-index: 9999;
 }
+.linkw:hover {
+	text-decoration: none;
+	filter: brightness(0.9);
+	transition: 0.2s;
+}
+.container-title {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+}
+.pagoMes, .ventasMes, .ventasAnio {
+	border: 1px solid #257d50;
+	border-radius: 5px;
+	padding: 3px;
+	margin-right: 5px;
+}
+.dflex {
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+.ui-datepicker-calendar {
+	display: none;
+}

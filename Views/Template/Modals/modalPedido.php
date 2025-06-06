@@ -33,7 +33,7 @@
                                             echo $data['orden']['idtransaccionpaypal'];
                                         }else{
                                     ?>
-                                        <input type="text" name="txtTransaccion" id="txtTransaccion" class="form-control" value="" required>
+                                        <input type="text" name="txtTransaccion" id="txtTransaccion" class="form-control" value="<?= $data['orden']['referenciacobro'] ?>" required>
                                         <?php } ?>
                                 </td>
                             </tr>

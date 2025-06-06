@@ -310,4 +310,21 @@
         return $request;
     }
 
+    function Meses()
+    {
+        $meses = array('Enero',
+                        'Febrero', 
+                        'Marzo', 
+                        'Abril', 
+                        'Mayo', 
+                        'Junio', 
+                        'Julio', 
+                        'Agosto', 
+                        'Setiembre', 
+                        'Octubre', 
+                        'Noviembre', 
+                        'Dicembre');
+        return $meses;
+    }
+
  ?>

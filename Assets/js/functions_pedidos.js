@@ -1,4 +1,4 @@
-let tablePedidos
+let tablePedidos;
 tablePedidos = $('#tablePedidos').dataTable({
 		"aProcessing":true,
 		"aServeSide":true,
@@ -191,8 +191,12 @@ function fntUpdateInfo()
 			if (request.readyState != 4) return;
 			if (request.status == 200) 
 			{
-				console.log(request.responseText);
-
+				let objData = JSON.parse(request.responseText);
+				if (objData.status) {
+					swal("", objData.msg, "success");
+					$("#modalFormPedido").modal('hide');
+					tablePedidos.api().ajax.reload(null, false);
+				}
 				divLoading.style.display = "none";
 				return false;
 			}

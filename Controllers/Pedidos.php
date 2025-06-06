@@ -52,8 +52,9 @@
 					$arrData[$i]['monto'] = SMONEY.formatMoney($arrData[$i]['monto']);
 
 					if ($_SESSION['permisosMod']['r']) {
-						$btnView .= ' <a title="Ver Detalle" href="'.base_url().'/pedidos/orden/'.$arrData[$i]['idpedido'].'" target="_blank" class="btn btn-info btn-sm"><i class="far fa-eye"></i></a>  
-							<button class="btn btn-danger btn-sm" onClick="fntViewDFP('.$arrData[$i]['idpedido'].')" title="Generar PDF" ><i class="fas fa-file-pdf"></i></button>';
+						$btnView .= ' <a title="Ver Detalle" href="'.base_url().'/pedidos/orden/'.$arrData[$i]['idpedido'].'" target="_blank" class="btn btn-info btn-sm"><i class="far fa-eye"></i></a>
+
+							<a title="Generar PDF" class="btn btn-danger btn-sm" href="'.base_url().'/factura/generarFactura/'.$arrData[$i]['idpedido'].'" target="_blank"  ><i class="fas fa-file-pdf"></i></a>';
 
 						if ($arrData[$i]['idtipopago'] == 1) {
 							$btnView .= ' <a title="Ver Transaccion"  href="'.base_url().'/pedidos/transaccion/'.$arrData[$i]['idtransaccionpaypal'].'" class = "btn btn-info btn-sm" target="_blank" > <i class="fa fa-paypal" aria-hidden="true"></i></a>';
@@ -64,10 +65,6 @@
 
 					if ($_SESSION['permisosMod']['u']) {			        	
 			        	$btnEdit = '<button class="btn btn-primary btn-sm btnEditRol" onClick="fntEditInfo('.$arrData[$i]['idpedido'].')" title="Editar Pedido"><i class="fa fa-solid fa-pencil"></i></button>';
-			        }
-
-			        if ($_SESSION['permisosMod']['d']) {
-			        	$btnDelete = '<button class="btn btn-danger btn-sm btnDelRol" onClick="fntDelRol('.$arrData[$i]['idpedido'].')" title="Eliminar Pedido"><i class="fa fa-solid fa-trash"></i></button>';
 			        }
 					$arrData[$i]['options'] = '<div class="text-center">' .$btnView.' '.$btnEdit.' '.$btnDelete.'</div>';
 				}
@@ -186,7 +183,7 @@
 		public function setPedido()
 		{
 			if ($_POST) 
-			{ dep($_POST); exit();
+			{ 
 				if ($_SESSION['permisosMod']['u'] AND $_SESSION['userData']['idrol'] != RCLIENTES) 
 				{
 			 		$idpedido = !empty($_POST['idPedido']) ? intval($_POST['idPedido']) : "";
@@ -201,7 +198,7 @@
 			 				if ($estado == "") {
 			 					$arrResponse = array('status' => false, 'msg' => "datos incorrectos");
 			 				}else{
-			 					$requestPedido = $this->model->updatePedido($idpedido, "", "", $estado);
+			 					$requestPedido = $this->model->updatePedido($idpedido, $estado, "", "" );
 			 					if ($requestPedido) {
 			 						$arrResponse = array('status' => true, 'msg' => "Datos Actualizados");
 			 					}else{
@@ -212,7 +209,7 @@
 			 				if ($transaccion == "" or $idtipopago == "" or $estado == "") {
 			 					$arrResponse = array('status' => false, 'msg' => 'Datos incorrectos');
 			 				}else{
-			 					$requestPedido = $this->model->updatePedido($idpedido, $transaccion, $idtipopago, $estado);
+			 					$requestPedido = $this->model->updatePedido($idpedido, $estado, $transaccion, $idtipopago);
 			 					if ($requestPedido) {
 			 						$arrResponse = array('status' => true, 'msg' => 'Datos actualizados correctamente');
 			 					}else{
@@ -221,7 +218,7 @@
 			 				}
 			 			}
 			 		}
-			 		json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+			 		echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
 			 	}			 	
 			} 
 			die();

@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function(){
 						$('#modalFormRol').modal('hide');
 						formRol.reset();
 						swal("Roles de Usuario", objData.msg, "success");
-						tableRoles.api().ajax.reload();						
+						tableRoles.api().ajax.reload();
 					}else{
 							swal("Error", objData.msg, "error");
 						}
