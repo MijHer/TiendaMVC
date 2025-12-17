@@ -180,7 +180,12 @@
 	<?php }else{ ?>
 		<br>
 		<div class="container" >
-			<a href="<?= base_url(); ?>/tienda"> Ver Productos</a>
+			<!-- Load more -->
+			<div class="flex-c-m flex-w w-full p-t-45">
+				<a href="<?= base_url() ?>/tienda" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn3 p-lr-15 trans-04">
+					Ver productos
+				</a>
+			</div>
 		</div>
 		<br>
 <?php

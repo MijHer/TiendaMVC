@@ -4,6 +4,7 @@
 	$arrProductos = $data['productos'];
 	$arrImages = $arrProducto['images'];
 	$rutacategoria = $arrProducto['categoriaid'].'/'.$arrProducto['ruta_categoria'];
+	$urlShared = base_url()."/tienda/producto/".$arrProducto['idproducto']."/".$arrProducto['ruta'];
 ?>
 <br><br><br>
 <hr>
@@ -99,21 +100,21 @@
 						<!--  -->
 						<div class="flex-w flex-m p-l-100 p-t-40 respon7">
 							<div class="flex-m bor9 p-r-10 m-r-11">
-								<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist">
-									<i class="zmdi zmdi-favorite"></i>
-								</a>
+								Compartir en:
 							</div>
 
-							<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Facebook">
+							<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Facebook"
+								onclick="window.open('https://www.facebook.com/sharer/sharer.php?u=<?= urlencode($urlShared); ?>&t=<?= urlencode($arrProducto['nombre']); ?>','ventanacompartir','toolbar=0,status=0,width=650,height=450');"
+								>
 								<i class="fa fa-facebook"></i>
 							</a>
 
-							<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Twitter">
+							<a href="https://twitter.com/intent/tweet?url=<?= $urlShared; ?>&text=<?= $arrProducto['nombre']; ?>&hashtags=<?= SHAREDHASH; ?>" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" target="_blank" data-tooltip="Twitter">
 								<i class="fa fa-twitter"></i>
 							</a>
 
-							<a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Google Plus">
-								<i class="fa fa-google-plus"></i>
+							<a href="https://api.whatsapp.com/send?text=<?= $arrProducto['nombre'].' '. $urlShared; ?>" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="WhatsApp" target="_blank">
+								<i class="fab fa-whatsapp" aria-hidden="true"></i>
 							</a>
 						</div>
 					</div>
@@ -167,9 +168,8 @@
 								</div>
 
 								<div class="block2-txt-child2 flex-r p-t-3">
-									<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-										<img class="icon-heart1 dis-block trans-04" src="<?= media() ?>/tienda/images/icons/icon-heart-01.png" alt="ICON">
-										<img class="icon-heart2 dis-block trans-04 ab-t-l" src="<?= media() ?>/tienda/images/icons/icon-heart-02.png" alt="ICON">
+									<a id="<?= openssl_encrypt($arrProductos[$j]['idproducto'], METHODENCRIPT, KEY) ?>" pr="1" href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2 icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-addcart-detail">
+										<i class="zmdi zmdi-shopping-cart"></i>
 									</a>
 								</div>
 							</div>							

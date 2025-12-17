@@ -17,7 +17,11 @@
                             <div class="form-group">
                                 <label class="control-label">Nombre Producto<span class="required"> * </span></label>
                                 <input class="form-control" type="text" id="txtNombre" name="txtNombre" required>
-                            </div>                
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Descripcion Corta<span class="required"> * </span></label>
+                                <input class="form-control" type="text" id="txtDesCorto" name="txtDesCorto">
+                            </div>
                             <div class="form-group">
                                 <label class="control-label">Descripcion Producto<span class="required"> * </span></label>
                                 <textarea class="form-control" id="txtDescripcion" name="txtDescripcion"></textarea>

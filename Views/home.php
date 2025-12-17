@@ -6,6 +6,11 @@
 		$arrSlider = $data['slider'];
 		$arrBanner = $data['banner'];
 		$arrProductos = $data['productos'];
+
+		$contentPage = "";
+		if (!empty($data['page'])) {
+			$contentPage = $data['page']['contenido'];
+		}
 	?>
 
 	<!-- Slider -->
@@ -120,17 +125,14 @@
 								<a href="<?= base_url().'/tienda/producto/'.$arrProductos[$p]['idproducto'].'/'.$rutaProducto; ?>" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
 									<?= $arrProductos[$p]['nombre'] ?>
 								</a>
-
 								<span class="stext-105 cl3">
 									<?= SMONEY.formatMoney($arrProductos[$p]['precio']); ?>
 								</span>
 							</div>
-
 							<div class="block2-txt-child2 flex-r p-t-3">
-								<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-									<img class="icon-heart1 dis-block trans-04" src="<?= media() ?>/tienda/images/icons/icon-heart-01.png" alt="ICON">
-									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="<?= media() ?>/tienda/images/icons/icon-heart-02.png" alt="ICON">
-								</a>
+								<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2 icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-addcart-detail" id="<?= openssl_encrypt($arrProductos[$p]['idproducto'], METHODENCRIPT, KEY) ?>">
+									<i class="zmdi zmdi-shopping-cart"></i>
+								</a> 
 							</div>
 						</div>
 					</div>
@@ -139,10 +141,14 @@
 			</div>
 			<!-- Load more -->
 			<div class="flex-c-m flex-w w-full p-t-45">
-				<a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
-					Load More
+				<a href="<?= base_url() ?>/tienda" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
+					Ver mas
 				</a>
 			</div>
+		</div>
+		<div class="container text-center p-t-80">
+			<hr>
+			<?= $contentPage ?>
 		</div>
 	</section>
 

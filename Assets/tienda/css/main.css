@@ -194,7 +194,26 @@ Input, textarea : 14px/1.6 '', Arial, sans-serif;
 
 /*//////////////////////////////////////////////////////////////////
 [ Header ]*/
+.modal {
+  z-index: 9999;
+}
 
+.container p {
+  margin-bottom: 20px;
+}
+
+.container ul, .container ol {
+  margin-left: 15px;
+  margin-bottom: 20px;
+}
+
+.container ul, .container ul li {
+  list-style: initial;
+}
+
+.container ol li {
+  list-style: image-set;
+}
 /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 [ Header Desktop ]*/
 

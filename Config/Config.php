@@ -36,11 +36,17 @@
     //detalles de la empresa
     const DIRECCION = "Jr. Los Pino N° 262 - Pillcomarca";
     const TELEMPRESA = "957 533 395";
+    const WHATSAPP = "+51957533395";
     const EMAIL_EMPRESA = "empresa@mail.com";
     const EMAIL_PEDIDOS = "gracmi8dsc@mkzaso.com"; //email donde se va a registrar los pedidos
+    const EMAIL_SUSCRIPCION = "miherxrxr@gmail.com";
+    const EMAIL_CONTACTO = "miherxrxr@gmail.com";
+    const DESCRIPCION = "La tienda virtual que esta de moda";
+    const SHAREDHASH = "TiendaVirtual";
 
     const CAT_SLIDER = "4,5,8";
     const CAT_BANNER = "1,7,9";
+    const CAT_FOOTER = "2,3,5,7";
 
     const KEY = "miher";
     const METHODENCRIPT = "AES-256-ECB";
@@ -48,13 +54,33 @@
     const COSTOENVIO = 10;
 
     //modulos
-
+    const MCLIENTES = 3;
     const MPEDIDOS = 5;
+    const MSUSCRIPTORES = 7;
+    const MCONTACTOS = 8;
+    const MPAGINAS = 9;
+
+    //paginas
+    const PPREGUNTAS = 6;
+    const PTERMINOS = 7;
+    const PERROR = 10;
 
     //roles
     const RADMINISTRADOR = 1;
     const RCLIENTES = 7;
 
     const STATUS = array('Completado', 'Aprobado', 'Cancelado', 'Reembolsado', 'Pendiente', 'Entregado');
+
+    // Para mostrar la cantidad por pagina
+    const CANTPRODHOME = 4;
+    const PRODPORPAGINA = 6;
+    const PROCATEGORIA = 2;
+    const PROBUSCAR = 3;
+
+    //redes sociales
+
+    const FACEBOOK = "https://www.facebook.com/mijailherder/";
+    const INSTAGRAM = "https://www.facebook.com/mijailherder/";
+    const LINKEDIN = "https://www.linkedin.com/in/mijail-herder-701323239/";
 
 ?>

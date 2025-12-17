@@ -24,7 +24,17 @@
 			$data['page_tag'] = NOMBRE_EMPRESA;
 			$data['page_title'] = NOMBRE_EMPRESA;
 			$data['page_name'] = "tienda";
-			$data['productos'] = $this->getProductosT();
+			
+			//$data['productos'] = $this->getProductosT();
+			$pagina = 1;
+			$cantProductos = $this->cantProductos();
+			$total_registro = $cantProductos['total_registro'];
+			$desde = ($pagina-1)*PRODPORPAGINA;
+			$total_paginas = ceil($total_registro / PRODPORPAGINA);
+			$data['productos'] = $this->getProductosPage($desde, PRODPORPAGINA);
+			$data['pagina'] = $pagina;
+			$data['total_paginas'] = $total_paginas;
+			$data['categorias'] = $this->getCategorias();
 			$this->views->getView($this,"tienda",$data);
 		}
 
@@ -33,14 +43,27 @@
 			if(empty($params)){
 				header("Location:".base_url());
 			}else{
-				$arrParams = explode(",", $params);				
+				$arrParams = explode(",", $params);
 				$idcategoria = intval($arrParams[0]);
 				$ruta = strClean($arrParams[1]);
-				$infoCategoria = $this->getProductosCategoriaT($idcategoria, $ruta);
+				$pagina = 1;
+				if (count($arrParams) > 2 AND  is_numeric($arrParams[2])) {
+					$pagina = $arrParams[2];
+				}
+				$cantProductos = $this->cantProductos($idcategoria);
+				$total_registro = $cantProductos['total_registro'];
+				$desde = ($pagina-1)*PROCATEGORIA;
+				$total_paginas = ceil($total_registro / PROCATEGORIA);
+				$infoCategoria = $this->getProductosCategoriaT($idcategoria, $ruta, $desde, PROCATEGORIA);
+
 				$data['page_tag'] = NOMBRE_EMPRESA." | ".$infoCategoria['categoria'];
 				$data['page_title'] = $infoCategoria['categoria'];
 				$data['page_name'] = "categoria";
 				$data['productos'] = $infoCategoria['productos'];
+				$data['infoCategoria'] = $infoCategoria;
+				$data['pagina'] = $pagina;
+				$data['total_paginas'] = $total_paginas;
+				$data['categorias'] = $this->getCategorias();
 				$this->views->getView($this,"categoria",$data);
 			}
 		}
@@ -239,7 +262,7 @@
 						$_SESSION['idUser'] = $request_user;
 						$_SESSION['login'] = true;
 						$this->login->sessionLogin($request_user);
-						//sendEmail($dataUsuario, 'email_bienvenida');						
+						//sendEmail($dataUsuario, 'email_bienvenida');
 					}else if($request_user == 'exist'){
 						$arrResponse = array('status' => false, 'msg' => '¡Atención! el email ya existe, ingrese otro.');		
 					}else{
@@ -397,6 +420,110 @@
 				$this->views->getView($this, "confirmarpedido", $data);				
 			}
 			unset($_SESSION['dataorden']);
+		}
+
+		public function page($pagina = NULL)
+		{
+			$pagina = $pagina != NULL ? $pagina : 1;
+			if (intval($pagina)) {
+				$cantProductos = $this->cantProductos();
+				$total_registro = $cantProductos['total_registro'];
+				$desde = ($pagina-1)*PRODPORPAGINA;
+				$total_paginas = ceil($total_registro / PRODPORPAGINA);
+				$data['productos'] = $this->getProductosPage($desde, PRODPORPAGINA);
+				$data['page_tag'] = NOMBRE_EMPRESA;
+				$data['page_title'] = NOMBRE_EMPRESA;
+				$data['page_name'] = "tienda";
+				$data['pagina'] = $pagina;
+				$data['total_paginas'] = $total_paginas;
+				$data['categorias'] = $this->getCategorias();
+				$this->views->getView($this,"tienda",$data);
+			}else{
+				header("Location:".base_url()."/tienda");
+			}
+			
+		}
+
+		public function search()
+		{
+			if (empty($_REQUEST['s'])) {
+				header("Location: ".base_url());
+			}else{
+				$busqueda = strClean($_REQUEST['s']);
+			}
+				$pagina = empty($_REQUEST['p']) ? 1 : intval($_REQUEST['p']);
+				$cantProductos = $this->cantProdSearch($busqueda);
+				$total_registro = $cantProductos['total_registro'];
+				$desde = ($pagina-1)*PROBUSCAR;
+				$total_paginas = ceil($total_registro / PROBUSCAR);
+				$data['page_tag'] = NOMBRE_EMPRESA;
+				$data['page_title'] = "Resultado de: ".$busqueda;
+				$data['page_name'] = "tienda";
+				$data['busqueda'] = $busqueda;
+				$data['pagina'] = $pagina;
+				$data['total_paginas'] = $total_paginas;
+				$data['productos'] = $this->getProdSearch($busqueda, $desde, PROBUSCAR);
+				$this->views->getView($this,"search",$data);
+		}
+
+		public function suscripcion()
+		{
+			if ($_POST) {
+				$nombre = ucwords(strtolower(strClean($_POST['nombreSuscripcion'])));
+				$email = strtolower(strClean($_POST['emailSuscripcion']));			
+				$suscripcion = $this->setSuscripcion($nombre, $email);				
+				if (intval($suscripcion) > 0) {
+					$arrResponse = array('status' => true, 'msg' => 'Gracias por suscribirte');
+					//Enviar Correo
+					$dataUsuario = array('asunto' => "Nueva suscripcion",
+											'email' => EMAIL_SUSCRIPCION,
+											'nombreSuscriptor' => $nombre,
+											'emailSuscriptor' => $email);
+					sendEmail($dataUsuario, 'email_suscripcion');
+				}else{
+					$arrResponse = array('status' => false, 'msg' => 'El email ya esta suscrito');
+				}
+				echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+			}
+			die();			
+		}
+
+		public function contacto()
+		{
+			if ($_POST) {
+				$nombre = ucwords(strtolower(strClean($_POST['nombreContacto'])));
+				$email = strtolower(strClean($_POST['emailContacto']));
+				$mensaje =  strClean($_POST['mensaje']);
+				$useragent = filter_input(INPUT_SERVER, 'HTTP_USER_AGENT');
+				//$useragent = $_SERVER['HTTP_USER_AGENT'];
+				$ip = $_SERVER['REMOTE_ADDR'];
+				$dispositivo = "Pc";
+
+				if (preg_match('/mobile/i', $useragent)) {
+					$dispositivo = "Movil";
+				}else if (preg_match('/table/i', $useragent)) {
+					$dispositivo = "Tablet";
+				}else if (preg_match('/iPhone/i', $useragent)) {
+					$dispositivo = "iPhone";
+				}else if (preg_match('/iPad/i', $useragent)) {
+					$dispositivo = "iPad";
+				}
+
+				$userContact = $this->setContacto($nombre, $email, $mensaje, $ip, $dispositivo, $useragent);
+				if (intval($userContact) > 0) {
+					$arrResponse = array('status' => true, 'msg' => 'Se envio el mensaje');
+					$dataUsuario = array('asunto' => "Mensaje de contacto",
+											'email' => EMAIL_CONTACTO,
+											'nombreContacto' => $nombre,
+											'emailContacto' => $email,
+											'mensaje' => $mensaje);
+					sendEmail($dataUsuario, 'email_contacto');
+				}else{
+					$arrResponse = array('status' => false, 'msg' => 'No se pudo enviar el mensaje');
+				}
+				echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+			}
+			die();
 		}
 	}
 

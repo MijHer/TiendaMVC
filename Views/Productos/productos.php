@@ -9,13 +9,13 @@
             <?php if ($_SESSION['permisosMod']['w']) { ?>
                 <button class="btn btn-primary" type="button" onclick="openModal();">Nuevo <i class="fa fa-solid fa-plus-circle"></i></button>
             <?php } ?>
-        </h1>
+            </h1>
+        </div>
+        <ul class="app-breadcrumb breadcrumb">
+            <li class="breadcrumb-item"><i class="fa fa-user"></i></li>
+            <li class="breadcrumb-item"><a href="<?= base_url();?>/productos"><?= $data['page_tag'] ?></a></li>
+        </ul>
     </div>
-    <ul class="app-breadcrumb breadcrumb">
-        <li class="breadcrumb-item"><i class="fa fa-user"></i></li>
-        <li class="breadcrumb-item"><a href="<?= base_url();?>/productos"><?= $data['page_tag'] ?></a></li>
-    </ul>
-</div>
 <div class="row">
     <div class="col-md-12">
         <div class="tile">

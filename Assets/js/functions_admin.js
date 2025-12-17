@@ -27,7 +27,7 @@ function testEntero(intCant){
 }
 
 function fntEmailValidate(email){
-    var stringEmail = new RegExp(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/);
+    var stringEmail = new RegExp(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})$/);
     if (stringEmail.test(email) == false){
         return false;
     }else{

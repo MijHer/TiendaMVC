@@ -7,6 +7,9 @@
 		$subtotal += $totalProductos;
 	}
 	$total += $subtotal + COSTOENVIO;
+	//dep($data['page']);
+	$infoTitulo = !empty(getInfoPage(PTERMINOS)) ? getInfoPage(PTERMINOS)['titulo'] : "";
+	$infoTermino = !empty(getInfoPage(PTERMINOS)) ? getInfoPage(PTERMINOS)['contenido'] : "";
  ?>
 
  	<script src="https://www.paypal.com/sdk/js?client-id=<?= IDCLIENTE ?>&buyer-country=US&currency=<?= CURRENCY ?>" data-sdk-integration-source="developer-studio">	
@@ -89,17 +92,18 @@
 	  <div class="modal-dialog modal-lg">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" >Terminos y Condiciones</h5>
+	        <h5 class="modal-title" ><?= $infoTitulo ?></h5>
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ex aliquam ducimus iste vero. Placeat iure vitae quisquam explicabo quia a animi impedit, autem labore, sint excepturi, reiciendis inventore, commodi similique!</p> <br>
-	        <p>Lorem ipsum dolor sit amet consectetur adipisicing, elit. Blanditiis, debitis totam asperiores eius iste suscipit architecto odit odio tempore ea vel repudiandae, ipsum sed, molestias rem illo temporibus nulla. Culpa?</p>
+	        <div class="page-content">
+	        	<?= $infoTermino ?>
+	        </div>
 	      </div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+	        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
 	      </div>
 	    </div>
 	  </div>

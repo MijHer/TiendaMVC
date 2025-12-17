@@ -155,6 +155,32 @@
 			}
 			return $request;
 		}
+
+		public function setSuscripcion(string $nombre, string $email)
+		{
+			$this->con = new Mysql();
+			$sql = "SELECT nombre, email FROM suscripcion WHERE email = '{$email}'";
+			$request = $this->con->select_all($sql);			
+			if (empty($request)) {
+				$query_insert = "INSERT INTO suscripcion(nombre, email) VALUES(?,?)";
+				$arrData = array($nombre, $email);
+				$request_insert = $this->con->insert($query_insert, $arrData);
+				$return = $request_insert;
+			}else{
+				$return = false;
+			}
+			return $return;
+		}
+
+		public function setContacto(string $nombre, string $email, string $mensaje, string $ip, string $dispositivo, string $useragent)
+		{
+			$this->con = new Mysql();
+			$sql = "INSERT INTO contacto(nombre, email, mensaje, ip, dispositivo, useragent)
+							VALUES(?,?,?,?,?,?)";
+			$arrData = array($nombre, $email, $mensaje, $ip, $dispositivo, $useragent);
+			$request_insert = $this->con->insert($sql, $arrData);
+			return $request_insert;
+		}
 	}
 
 ?>

@@ -50,7 +50,7 @@
 					$request_categoria = "";
 
 					if ($nombre_foto != '') {
-						$imgPortada = 'img_'.md5(date('d-m-Y H:m:s')).'.jpg';
+						$imgPortada = 'img_'.md5(date('d-m-Y H:i:s')).'.jpg';
 					}
 
 					if ($intIdCategoria == 0) 

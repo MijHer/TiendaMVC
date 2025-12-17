@@ -25,10 +25,7 @@ $('.js-addwish-b2').on('click', function(e){
 $('.js-addwish-b2').each(function(){
 	var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
 	$(this).on('click', function(){
-		swal(nameProduct, "is added to wishlist !", "success");
-
-		$(this).addClass('js-addedwish-b2');
-		$(this).off('click');
+		swal(nameProduct, "¡Se agrego al carrito!", "success");
 	});
 });
 
@@ -46,11 +43,19 @@ $('.js-addwish-detail').each(function(){
 /*---------------------------------------------*/
 
 $('.js-addcart-detail').each(function(){
-	var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+	let nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
 	$(this).on('click', function(){
 
+		let cant = 1;
 		let id = this.getAttribute('id');
-		let cant = document.querySelector('#cant-product').value;
+		if (document.querySelector('#cant-product'))
+		{
+			cant = document.querySelector('#cant-product').value;
+		}
+		if (this.getAttribute('pr')) 
+		{
+			cant = this.getAttribute('pr');
+		}
 
 		if (Number.isNaN(cant) || cant < 1) 
 		{
@@ -79,7 +84,7 @@ $('.js-addcart-detail').each(function(){
 					cants.forEach(element => {
 						element.setAttribute("data-notify", objData.cantCarrito);
 					});
-					swal("", "¡Se agrego al carrito!", "success");
+					swal(nameProduct, "¡Se agrego al carrito!", "success");
 				}
 			}
 			return false;
@@ -369,6 +374,98 @@ if (document.querySelector('#btnComprar')){
 			}
 		}
 
+	},false);
+}
+
+if (document.querySelector("#formSuscripcion")) 
+{
+	let formSuscripcion = document.querySelector('#formSuscripcion');
+	formSuscripcion.addEventListener('submit', function (e) {
+		e.preventDefault();
+		let nombre = document.querySelector('#nombreSuscripcion').value;
+		let email = document.querySelector('#emailSuscripcion').value;
+
+		if (nombre == "") {
+			swal('', 'El nombre es obligatorio', 'error')
+			return false;
+		}
+		if (!fntEmailValidate(email)) {
+			swal('', 'El corro no es valido', 'error');
+			return false;
+		}
+		divLoading.style.display = "flex";
+		let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+		let ajaxUrl = base_url+'/Tienda/suscripcion';
+		let formData = new FormData(formSuscripcion);		
+		request.open("POST", ajaxUrl, true);
+		request.send(formData);
+
+		request.onreadystatechange = function(){
+			if (request.readyState != 4) return;
+			if (request.status == 200) {
+				console.log(request.responseText);
+				let objData = JSON.parse(request.responseText);
+				if (objData.status) {
+					swal('', objData.msg, 'success');
+					document.querySelector("#formSuscripcion").reset();
+				}else{
+					swal ('', objData.msg, 'error');
+				}		
+			}
+			divLoading.style.display = "none";
+			return false;
+		}
+	},false);
+}
+
+if (document.querySelector("#formContacto")) 
+{
+	let formContacto = document.querySelector("#formContacto");
+	formContacto.addEventListener('submit', function (e) {
+		e.preventDefault();
+
+		let nombre = document.querySelector("#nombreContacto").value;
+		let email = document.querySelector("#emailContacto").value;
+		let mensaje = document.querySelector("#mensaje").value;
+
+		if (nombre == "") 
+		{
+			swal('', '¡Nombre es obligatorio!', 'error');
+			return false;
+		}
+		if (!fntEmailValidate(email)) 
+		{
+			swal('', '¡Email no valido!', 'error');
+			return false;
+		}
+		if (mensaje == "") 
+		{
+			swal('', '¡Ingrese mensaje!', 'error');
+			return false;
+		}
+
+		divLoading.style.display = "flex";
+		let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+		let ajaxUrl = base_url+"/Tienda/contacto";
+		let formData = new FormData(formContacto);
+		request.open("POST", ajaxUrl, true);
+		request.send(formData);
+
+		request.onreadystatechange = function () {
+			if (request.readyState != 4) return ;
+			if (request.status = 200){
+
+				let objData = JSON.parse(request.responseText);
+				if (objData.status) {
+					swal('¡Felicidades!', objData.msg, 'success');
+					document.querySelector("#formContacto").reset();
+				}else{
+					swal('¡Atencion!', objData.msg, 'error');
+				}
+			}
+			divLoading.style.display = "none";
+			return false;
+		}
 	},false);
 }
 

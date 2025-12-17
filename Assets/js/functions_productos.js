@@ -324,7 +324,7 @@ function fntEditInfo(idProducto)
 		request.onreadystatechange = function () {
 			if (request.readyState == 4 && request.status == 200) 
 			{
-				console.log(request.responseText);
+				//console.log(request.responseText);
 				let objData = JSON.parse(request.responseText);
 				document.querySelector("#containerGallery").classList.remove("notblock");
 				if (objData.status) 
@@ -333,6 +333,7 @@ function fntEditInfo(idProducto)
 					let objProducto = objData.data;
 					document.querySelector('#idProducto').value = objProducto.idproducto;
 					document.querySelector('#txtNombre').value = objProducto.nombre;
+					document.querySelector('#txtDesCorto').value = objProducto.descorto;
 					document.querySelector('#txtDescripcion').value = objProducto.descripcion;
 					document.querySelector('#txtCodigo').value = objProducto.codigo;
 					document.querySelector('#txtPrecio').value = objProducto.precio;

@@ -5,6 +5,7 @@
 		private $intIdProducto;
 		private $strNombre;
 		private $strDescripcion;
+		private $strDesCorto;
 		private $intCodigo;
 		private $intCategoriaId;
 		private $intPrecio;
@@ -18,9 +19,10 @@
 			parent::__construct();
 		}
 
-		public function insertProducto(string $nombre, string $descripcion, string $codigo, int $categoriaid, string $precio, int $stock, string $ruta, int $status)
+		public function insertProducto(string $nombre, string $descorto, string $descripcion, string $codigo, int $categoriaid, string $precio, int $stock, string $ruta, int $status)
 		{
 			$this->strNombre =  $nombre;
+			$this->strDesCorto = $descorto;
 			$this->strDescripcion = $descripcion;
 			$this->intCodigo = $codigo;
 			$this->intCategoriaId = $categoriaid;
@@ -35,10 +37,11 @@
 
 			if (empty($request)) 
 			{
-				$query_insert = "INSERT INTO producto(categoriaid, codigo, nombre, descripcion, precio, stock, ruta, status) VALUES (?,?,?,?,?,?,?,?)";
+				$query_insert = "INSERT INTO producto(categoriaid, codigo, nombre, descorto, descripcion, precio, stock, ruta, status) VALUES (?,?,?,?,?,?,?,?,?)";
 				$arrData = array($this->intCategoriaId,
 									$this->intCodigo,
 									$this->strNombre,
+									$this->strDesCorto,
 									$this->strDescripcion,
 									$this->intPrecio,
 									$this->intStock,
@@ -53,10 +56,11 @@
 			return $return;
 		}
 
-		public function updateProducto(int $idproducto, string $nombre, string $descripcion, string $codigo, int $categoriaid, string $precio, int $stock, string $ruta, int $status)
+		public function updateProducto(int $idproducto, string $nombre, string $descorto, string $descripcion, string $codigo, int $categoriaid, string $precio, int $stock, string $ruta, int $status)
 		{
 			$this->intIdProducto = $idproducto;
 			$this->strNombre =  $nombre;
+			$this->strDesCorto = $descorto;
 			$this->strDescripcion = $descripcion;
 			$this->intCodigo = $codigo;
 			$this->intCategoriaId = $categoriaid;
@@ -70,11 +74,12 @@
 			$request = $this->select_all($sql);
 			if (empty($request)) 
 			{
-				$sql = "UPDATE producto SET categoriaid = ?, codigo = ?, nombre = ?, descripcion = ?, precio = ?, stock = ?, ruta = ?, status = ?
+				$sql = "UPDATE producto SET categoriaid = ?, codigo = ?, nombre = ?, descorto = ?, descripcion = ?, precio = ?, stock = ?, ruta = ?, status = ?
 										WHERE idproducto = $this->intIdProducto";
 				$arrData = array($this->intCategoriaId,
 									$this->intCodigo,
 									$this->strNombre,
+									$this->strDesCorto,
 									$this->strDescripcion,
 									$this->intPrecio,
 									$this->intStock,
@@ -92,7 +97,8 @@
 		{
 			$sql = "SELECT p.idproducto, 
 							p.codigo, 
-							p.nombre, 
+							p.nombre,
+							p.descorto,
 							p.descripcion, 
 							p.categoriaid, 
 							c.nombre as categoria, 
@@ -130,6 +136,7 @@
 			$sql = "SELECT p.idproducto,
 							p.codigo,
 							p.nombre,
+							p.descorto,
 							p.descripcion,
 							p.precio,
 							p.stock,

@@ -18,6 +18,25 @@
 				}
 			}
 			return $request;
+		}
+
+		public function getCategorias()
+		{
+			$this->con = new Mysql();
+			$sql = "SELECT c.idcategoria, c.nombre, c.portada, c.ruta, count(p.categoriaid) AS cantidad
+					FROM producto p
+					INNER JOIN categoria c
+					ON p.categoriaid = c.idcategoria
+					WHERE c.status = 1 
+					GROUP BY p.categoriaid, c.idcategoria";
+			$request = $this->con->select_all($sql);
+			if (count($request) > 0) {
+				for ($i=0; $i < count($request); $i++) 
+				{ 
+					$request[$i]['portada'] = BASE_URL.'/Assets/images/uploads/'.$request[$i]['portada'];
+				}
+			}
+			return $request;
 		}		
 	}
 ?>

@@ -12,6 +12,8 @@
 		{
 			parent::__construct();
 			session_start();
+
+			getPermisos(PTERMINOS);
 		}
 
 		public function carrito()
@@ -31,6 +33,7 @@
 			$data['page_tag'] = NOMBRE_EMPRESA. " - Procesar Pago";
 			$data['page_title'] = 'Procesar Pago';
 			$data['page_name'] = "procesarpago";
+			$data['page'] = getPageRout('terminos-y-condiciones');			
 			$data['tiposPago'] = $this->getTiposPagoT();
 			$this->views->getView($this, 'procesarpago', $data);
 		}

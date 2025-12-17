@@ -1,3 +1,6 @@
+<?php 
+	$catFotter = getCatFooter();
+ ?>
 <!-- Footer -->
 	<footer class="bg3 p-t-75 p-b-32">
 		<div class="container">
@@ -6,32 +9,21 @@
 					<h4 class="stext-301 cl0 p-b-30">
 						Categorías
 					</h4>
-
+					<?php 
+						if (count($catFotter) > 0) {
+							foreach ($catFotter as $cat) {
+					?>
 					<ul>
 						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Women
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Men
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Shoes
-							</a>
-						</li>
-
-						<li class="p-b-10">
-							<a href="#" class="stext-107 cl7 hov-cl1 trans-04">
-								Watches
+							<a href="<?= base_url()."/tienda/categoria/".$cat['idcategoria']."/".$cat['ruta'] ?>" class="stext-107 cl7 hov-cl1 trans-04">
+								<?= $cat['nombre'] ?>
 							</a>
 						</li>
 					</ul>
+					<?php
+							} 
+						}
+					?>
 				</div>
 
 				<div class="col-sm-6 col-lg-4 p-b-50">
@@ -40,17 +32,22 @@
 					</h4>
 
 					<p class="stext-107 cl7 size-201">
-						Jr. Los Pinos # 262 <br>
-						Telf: 957 533 395
+						<?= DIRECCION ?> <br>
+						Telf: <a class="linkFotter" href="tel:<?= TELEMPRESA ?>"><?= TELEMPRESA ?></a><br>
+						Email: <a class="linkFotter" href="mailto:<?= EMAIL_EMPRESA ?>"><?= EMAIL_EMPRESA ?></a>
 					</p>
 
 					<div class="p-t-27">
-						<a href="https://facebook.com/abelosh" target="_blanck" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+						<a href="<?= FACEBOOK ?>" target="_blanck" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
 							<i class="fa fa-facebook"></i>
 						</a>
 
-						<a href="https://instagram.com/febel24" target="_blanck"  class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+						<a href="<?= INSTAGRAM ?>" target="_blanck"  class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
 							<i class="fa fa-instagram"></i>
+						</a>
+
+						<a href="https://wa.me/<?= WHATSAPP ?>" target="_blanck"  class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+							<i class="fa fa-whatsapp"></i>
 						</a>
 					</div>
 				</div>
@@ -60,12 +57,16 @@
 						Suscríbete
 					</h4>
 
-					<form>
+					<form id="formSuscripcion" name="formSuscripcion">
 						<div class="wrap-input1 w-full p-b-4">
-							<input class="input1 bg-none plh1 stext-107 cl7" type="text" name="email" placeholder="email@example.com">
+							<input class="input1 bg-none plh1 stext-107 cl7" type="text" id="nombreSuscripcion" name="nombreSuscripcion" placeholder="Nombre completo" required>
 							<div class="focus-input1 trans-04"></div>
 						</div>
-
+						<br>
+						<div class="wrap-input1 w-full p-b-4">
+							<input class="input1 bg-none plh1 stext-107 cl7" type="email" id="emailSuscripcion" name="emailSuscripcion" placeholder="email@example.com" required>
+							<div class="focus-input1 trans-04"></div>
+						</div>
 						<div class="p-t-18">
 							<button class="flex-c-m stext-101 cl0 size-103 bg1 bor1 hov-btn2 p-lr-15 trans-04">
 								Suscribirme
@@ -122,6 +123,7 @@
 	<!--===============================================================================================-->
 	<script src="<?= media() ?>/tienda/vendor/perfect-scrollbar/perfect-scrollbar.min.js"></script>
 	<!--===============================================================================================-->
+    <script src="<?= media(); ?>/js/fontawesome.js"></script>
 	<script src="<?= media() ?>/tienda/js/main.js"></script>
 	<script src="<?= media() ?>/js/functions_admin.js"></script>
 	<script src="<?= media() ?>/tienda/js/functions.js"></script>

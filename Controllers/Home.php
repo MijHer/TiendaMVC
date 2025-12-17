@@ -15,9 +15,11 @@
 
 		public function home()
 		{
+			$pageContent = getPageRout('inicio');
 			$data['page_tag'] = "Tienda Virtual";
 			$data['page_title'] = "Tienda Virtual";
 			$data['page_name'] = "Tienda";
+			$data['page'] = $pageContent;
 			$data['slider'] = $this->getCategoriasT(CAT_SLIDER);
 			$data['banner'] = $this->getCategoriasT(CAT_BANNER);
 			$data['productos'] = $this->getProductosT();

@@ -29,7 +29,7 @@ class Productos extends Controllers
 		}
 
 		public function setProducto()
-		{
+		{			
 			if ($_POST) 
 			{
 				if(empty($_POST['txtNombre']) || empty($_POST['txtCodigo']) || empty($_POST['listCategoria']) || empty($_POST['txtPrecio']) || empty($_POST['listStatus']) ){
@@ -37,7 +37,8 @@ class Productos extends Controllers
 				}else{
 
 					$idProducto = intval($_POST['idProducto']);
-					$strNombre = strClean($_POST['txtNombre']);
+					$strNombre = strClean($_POST['txtNombre']); 
+					$strDesCorto = strClean($_POST['txtDesCorto']);
 					$strDescripcion = strClean($_POST['txtDescripcion']);
 					$strCodigo = strClean($_POST['txtCodigo']);
 					$intCategoria = intval($_POST['listCategoria']);
@@ -57,6 +58,7 @@ class Productos extends Controllers
 						if ($_SESSION['permisosMod']['w'])
 						{
 							$request_producto = $this->model->insertProducto($strNombre,
+																		$strDesCorto,
 																		$strDescripcion,
 																		$strCodigo,
 																		$intCategoria,
@@ -72,6 +74,7 @@ class Productos extends Controllers
 						{						
 							$request_producto = $this->model->updateProducto($idProducto,							
 																		$strNombre,
+																		$strDesCorto,
 																		$strDescripcion,
 																		$strCodigo,
 																		$intCategoria,
